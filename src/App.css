@@ -1,0 +1,31 @@
+.App {
+  text-align: center;
+  font-size: 0;
+}
+
+
+.square{
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 1px black solid;
+}
+
+
+.enemy{
+  background-color: red;
+}
+
+.player{
+  background-color: orange;
+}
+
+.empty{
+  background-color: white;
+}
+
+.screen{
+  font-size: 12px;
+}
