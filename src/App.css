@@ -3,28 +3,54 @@
   font-size: 0;
 }
 
-
-.square{
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  border: 1px black solid;
+body{
+  background-color: gray;
 }
 
 
+.container{
+  border: solid black 1px;
+  width: 300px;
+  margin: auto;
+}
+
+.square{
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+.screen_value_wrapper{
+  display: inline-block;
+  margin: 5px;
+  font-weight: 500;
+  color: white;
+}
+
+.screen_value{
+  border: solid black 1px;
+  margin: 5px;
+  background-color: white;
+  color: red;
+  width: 30px;
+  display: inline-block;
+}
+
 .enemy{
   background-color: red;
+  color: red;
 }
 
 .player{
   background-color: orange;
+  color: orange;
 }
 
 .empty{
   background-color: white;
 }
+
 
 .screen{
   font-size: 12px;

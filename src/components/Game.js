@@ -20,7 +20,6 @@ class Game extends React.Component {
             player: 4
         };
 
-        // this.receiveClick = this.receiveClick.bind(this);
     }
 
     componentWillMount(){
@@ -64,6 +63,9 @@ class Game extends React.Component {
                 iterator = 0;
             }
 
+
+
+
             let oldSquares = this.state.squares;
             let newSquares = [];
             for(let i = 0; i < 10; i++){
@@ -79,9 +81,12 @@ class Game extends React.Component {
             oldSquares.forEach(oldSquare =>{
                 if((oldSquare.props.y !== undefined)) {
                     if (oldSquare.props.y !== 19) {
+
                         let isPlayer = (oldSquare.props.y === 18 && oldSquare.props.x === this.state.player);
+                        let isEnemy = oldSquare.props.isEnemy;
+
                         newSquares.push(
-                            <Square isPlayer={isPlayer} isEnemy={oldSquare.props.isEnemy} y={oldSquare.props.y + 1}
+                            <Square isPlayer={isPlayer} isEnemy={isEnemy} y={oldSquare.props.y + 1}
                                     x={oldSquare.props.x}/>
                         );
                         if (oldSquare.props.x === 9) {
@@ -101,18 +106,17 @@ class Game extends React.Component {
                 time: this.state.time + (this.state.speed/1000),
                 squares: newSquares,
                 iterator: iterator,
-                score: score
+                score: score,
             })
         },this.state.speed)
     }
-
 
 
     render() {
         this.state.squares.forEach(square=>{
            if(square.props.isPlayer && square.props.isEnemy){
                 clearInterval(this.state.interval);
-               alert('Game Over!');
+               alert(`Game Over!\nYour Score: ${this.state.score}\nTime: ${Math.floor(this.state.time)}s`);
            }
         });
 

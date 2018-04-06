@@ -14,13 +14,16 @@ class Square extends React.Component {
 
         if(this.props.isPlayer){
             filed = 'player square'
-        }else if(this.props.isEnemy){
-            filed = 'enemy square'
+        }else if(this.props.isEnemy ){
+            if(this.props.move !== 0){
+                filed = 'enemy square move'
+            }else{
+                filed = 'enemy square'
+            }
         }
 
         return(
             <div className={filed}>
-
             </div>
         );
     }
