@@ -3,14 +3,6 @@ import React from 'react';
 
 class Screen extends React.Component {
 
-    constructor(){
-        super();
-
-    }
-
-
-
-
     render() {
         let time = Math.floor(this.props.time);
         return(

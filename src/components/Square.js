@@ -3,23 +3,16 @@ import React from 'react';
 
 class Square extends React.Component {
 
-    constructor(){
-        super();
-    }
-
-
     render() {
 
-        let filed ='empty square';
+        let filed ='square';
 
         if(this.props.isPlayer){
-            filed = 'player square'
+            filed += ' player';
         }else if(this.props.isEnemy ){
-            if(this.props.move !== 0){
-                filed = 'enemy square move'
-            }else{
-                filed = 'enemy square'
-            }
+            filed += ' enemy';
+        }else{
+            filed += ' empty';
         }
 
         return(

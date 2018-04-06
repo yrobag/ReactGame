@@ -5,7 +5,11 @@ import Screen from "./Screen";
 
 class Game extends React.Component {
 
-
+    gameParams = {
+        width: 10,
+        height: 20,
+        newEnemyInterval: 4
+    };
 
     constructor(){
         super();
@@ -14,7 +18,7 @@ class Game extends React.Component {
             interval: null,
             time: 0,
             squares: [],
-            speed: 100,
+            speed: 50,
             score: 0,
             iterator: 4,
             player: 4
@@ -23,10 +27,26 @@ class Game extends React.Component {
     }
 
     componentWillMount(){
+
+        this.createInitialSquares();
+
+        this.initKeyHandlers();
+
+        this.state.interval = setInterval(()=>{
+
+            this.updateGame();
+
+            this.setState({
+                time: this.state.time + (this.state.speed/1000)
+            })
+        },this.state.speed)
+    }
+
+    createInitialSquares(){
         let squares = [];
-        for(let i = 0; i<20; i++){
-            for(let j = 0;j<10;j++){
-                let isPlayer = (i===19 && j===this.state.player);
+        for(let i = 0; i<this.gameParams.height; i++){
+            for(let j = 0;j<this.gameParams.width;j++){
+                let isPlayer = (i===this.gameParams.height-1 && j===this.state.player);
                 squares.push(
                     <Square isPlayer={isPlayer} isEnemy={false} y={i} x={j}/>
                 )
@@ -37,79 +57,109 @@ class Game extends React.Component {
             squares: squares
         });
 
+    }
 
-
+    initKeyHandlers(){
         document.addEventListener('keydown', (e)=>{
             if(e.keyCode === 37 && this.state.player >0){
                 this.setState({
                     player: this.state.player-1
                 })
             }
-            if(e.keyCode === 39 && this.state.player <9){
+            if(e.keyCode === 39 && this.state.player <this.gameParams.width-1){
                 this.setState({
                     player: this.state.player+1
                 })
             }
         });
+    }
 
 
+    updateGame(){
 
-        this.state.interval = setInterval(()=>{
-            let score = this.state.score;
-            let column;
-            let iterator = this.state.iterator + 1;
-            if(this.state.iterator === 4){
-                column = Math.floor(Math.random() * 10);
-                iterator = 0;
-            }
+        let newSquares = this.createNewFirstLine();
 
+        let updatedSquares = this.updateSquares();
 
+        let squares = newSquares.concat(updatedSquares);
 
+        this.setState({
+            squares: squares,
+        });
 
-            let oldSquares = this.state.squares;
-            let newSquares = [];
-            for(let i = 0; i < 10; i++){
-                let isEnemy = (column === i);
+    }
 
-                newSquares.push(
-                    <Square isPlayer={false} isEnemy={isEnemy} y={0} x={i}/>
-                )
-            }
+    createNewFirstLine(){
+        let columnForNewEnemy = this.createNewEnemy();
+
+        let newSquares = [];
+        for(let i = 0; i < this.gameParams.width; i++){
+            let isEnemy = (columnForNewEnemy === i);
+
             newSquares.push(
-                <br/>
-            );
-            oldSquares.forEach(oldSquare =>{
-                if((oldSquare.props.y !== undefined)) {
-                    if (oldSquare.props.y !== 19) {
+                <Square isPlayer={false} isEnemy={isEnemy} y={0} x={i}/>
+            )
+        }
+        newSquares.push(
+            <br/>
+        );
 
-                        let isPlayer = (oldSquare.props.y === 18 && oldSquare.props.x === this.state.player);
-                        let isEnemy = oldSquare.props.isEnemy;
+        return newSquares;
+    }
 
-                        newSquares.push(
-                            <Square isPlayer={isPlayer} isEnemy={isEnemy} y={oldSquare.props.y + 1}
-                                    x={oldSquare.props.x}/>
-                        );
-                        if (oldSquare.props.x === 9) {
-                            newSquares.push(
-                                <br/>
-                            )
-                        }
-                    }else{
-                        if(oldSquare.props.isEnemy){
-                            score += 1;
-                        }
+    createNewEnemy(){
+        let column;
+        let iterator = this.state.iterator;
+        if(iterator === this.gameParams.newEnemyInterval){
+            column = Math.floor(Math.random() * this.gameParams.width);
+            iterator = 0
+        }else{
+            iterator += 1;
+        }
+        this.setState({
+            iterator: iterator
+        });
+
+        return column;
+    }
+    updateSquares(){
+        let updatedSquares = [];
+        let oldSquares = this.state.squares;
+        let score = this.state.score;
+        oldSquares.forEach(oldSquare =>{
+            if((oldSquare.props.y !== undefined)) {
+                if (oldSquare.props.y !== this.gameParams.height-1) {
+
+                    let isPlayer = (oldSquare.props.y === (this.gameParams.height-2) && oldSquare.props.x === this.state.player);
+                    let isEnemy = oldSquare.props.isEnemy;
+
+                    updatedSquares.push(
+                        <Square isPlayer={isPlayer} isEnemy={isEnemy} y={oldSquare.props.y + 1}
+                                x={oldSquare.props.x}/>
+                    );
+                    if (oldSquare.props.x === 9) {
+                        updatedSquares.push(
+                            <br/>
+                        )
+                    }
+                }else{
+                    if(oldSquare.props.isEnemy){
+                        score += 1;
                     }
                 }
-            });
+            }
+        });
 
-            this.setState({
-                time: this.state.time + (this.state.speed/1000),
-                squares: newSquares,
-                iterator: iterator,
-                score: score,
-            })
-        },this.state.speed)
+        this.setState({
+            score: score,
+        });
+
+        return updatedSquares;
+
     }
+
+
+
 
 
     render() {
