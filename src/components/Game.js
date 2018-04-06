@@ -46,7 +46,6 @@ class Game extends React.Component {
                     player: this.state.player-1
                 })
             }
-            console.log(e.keyCode );
             if(e.keyCode === 39 && this.state.player <9){
                 this.setState({
                     player: this.state.player+1
